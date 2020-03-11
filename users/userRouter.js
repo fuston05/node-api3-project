@@ -3,6 +3,7 @@ const users= require('../users/userDb');
 
 const router = express.Router();
 
+//custom middleware
 function validateUserId(req, res, next) {
   // must have an id
   if( req.params.id ){
@@ -26,13 +27,28 @@ function validateUserId(req, res, next) {
   }// end if req.params.id
 }//end validateUserId
 
-router.post('/', (req, res) => {
-  // do your magic!
+function validateUser(req, res, next) {
+  //if body is missing or empty
+  if( Object.keys(req.body).length <= 0 ){
+    res.status(400).json({
+      message: "missing user data"
+    });
+    //if name field is missing
+  }else if(!req.body.name){
+    res.status(400).json({
+      message: "missing required name field"
+    });
+  }else{
+    next();
+  }//end if else
+}//end validate user
+
+router.post('/', validateUser, (req, res) => {
+  res.status(200).json({messgae: "success"})
 });
 
-router.post('/:id/posts', validateUserId, (req, res) => {
-  console.log('req.params.id:', req.params.id)
-  res.status(200).json({messgae: "success"})
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
+  res.status(200).json({message: "success from /:id/posts"});
 });
 
 router.get('/', (req, res) => {
@@ -55,16 +71,22 @@ router.put('/:id', validateUserId, (req, res) => {
   // do your magic!
 });
 
-//custom middleware
-
-
-
-function validateUser(req, res, next) {
-  // do your magic!
-}//end validate user
-
 function validatePost(req, res, next) {
-  // do your magic!
-}
+  console.log('validatePost: ', validatePost);
+  // if body is empty
+  if( Object.keys(req.body).length <= 0 ){
+    res.status(400).json({
+      message: "missing post data"
+    });
+    //if text field is not in the body
+  }else if( !req.body.text ){
+    res.status(400).json({
+      message: "missing required text field"
+    });
+  }else{
+    //if validation passes
+    next();
+  }//end if else
+}//end validatePost
 
 module.exports = router;
