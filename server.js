@@ -1,4 +1,5 @@
 const express = require('express');
+const moment= require('moment');
 
 //routes
 const postRouter= require('./posts/postRouter');
@@ -26,13 +27,15 @@ server.get('/', (req, res) => {
 //custom middleware
 
 function logger(req, res, next) {
-  const method= req.method;
+  const ts= `"${moment(new Date(Date.now()), "MM-DD-YYYY")}"`;
+  const method= `"${req.method}"`;
   const fromURL= `"${req.url}"`;
   const protocol= `"${req.protocol}"`;
   const ip= `"${req.ip}"`;
   const contentType= `"${req.get('content-type')}"`
 
-  console.log(`\n** LOGGER: **\n A "${method}" request was made to URL: ${fromURL}, \n protocol: ${protocol},\n ip: ${ip}, \ncontent-type: ${contentType}
+  //output
+  console.log(`\n** LOGGER: **\n A ${method} request was made to URL: ${fromURL} \n Timestamp: ${ts}, \n protocol: ${protocol},\n ip: ${ip}, \ncontent-type: ${contentType}
   `);
 
   next();
