@@ -1,4 +1,5 @@
 const express = require('express');
+const cors= require('cors');
 const moment = require('moment');
 
 //routes
@@ -11,6 +12,7 @@ const server = express();
 
 //middleWare
 server.use(helmet());
+server.use(cors());
 server.use(logger);
 server.use(express.json());
 
