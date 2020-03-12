@@ -1,0 +1,23 @@
+.card{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80%;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  box-shadow: 3px 3px 8px #333;
+  margin: 1% 0;
+  padding: 2% 0;
+  background-color: darkgoldenrod;
+
+  &:hover{
+    cursor: pointer;
+    opacity: 0.8;
+  }
+
+  h2{
+    font-size: 1.5rem;
+    color: linen;
+  }
+
+}
