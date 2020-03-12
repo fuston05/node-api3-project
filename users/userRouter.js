@@ -1,7 +1,6 @@
 const express = require('express');
 const users= require('../users/userDb');
 const posts= require('../posts/postDb');
-const shortid = require('shortid');
 
 const router = express.Router();
 
@@ -63,7 +62,7 @@ function validatePost(req, res, next) {
   }//end if else
 }//end validatePost
 
-//route handlers
+// *********** route handlers *********** //
 //create a new user
 router.post('/', validateUser, (req, res) => {
   users.insert(req.body)

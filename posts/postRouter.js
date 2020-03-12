@@ -1,6 +1,5 @@
 const express = require('express');
 const posts= require('../posts/postDb');
-const shortid = require('shortid');
 
 const router = express.Router();
 
@@ -35,28 +34,48 @@ function validatePostId(req, res, next) {
   }//end if
 }//end validatePostId
 
+//get all posts
 router.get('/', (req, res) => {
-  res.status(200).json({
-    message: "success from '/'"
+  posts.get()
+  .then( posts => {
+    res.status(200).json({posts});
+  } )
+  .catch(error  => {
+    res.status(500).json({error: "Could not process your request"})
   });
 });
 
+//get a post by its id
 router.get('/:id', validatePostId, (req, res) => {
-  res.status(200).json({
-    message: "success from /:id of 'posts'"
-  });
+  posts.getById(req.params.id)
+  .then( post => {
+    res.status(200).json({post});
+  } )
+  .catch(error => {
+    res.status(500).json({error: "Could not process your request"});
+  })
 });
 
+//delete a post by its ID
 router.delete('/:id', validatePostId, (req, res) => {
-  res.status(200).json({
-    message: "success from /:id of 'delete posts'"
-  });
+  posts.remove(req.params.id)
+  .then( post => {
+    res.status(200).json({post});
+  } )
+  .catch(error => {
+    res.status(500).json({error: "Could not process your request"})
+  })
 });
 
+//edit/update a post by its ID
 router.put('/:id', validatePostId, (req, res) => {
-  res.status(200).json({
-    message: "success from /:id of ' put posts'"
-  });
+  posts.update(req.params.id, req.body)
+  .then( post => {
+    res.status(200).json({post});
+  } )
+  .catch(error => {
+    res.status(500).json({error: "Could not process your request"});
+  })
 });
 
 module.exports = router;
