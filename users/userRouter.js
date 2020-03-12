@@ -43,6 +43,24 @@ function validateUser(req, res, next) {
   }//end if else
 }//end validate user
 
+function validatePost(req, res, next) {
+  console.log('validatePost: ', validatePost);
+  // if body is empty
+  if( Object.keys(req.body).length <= 0 ){
+    res.status(400).json({
+      message: "missing post data"
+    });
+    //if text field is not in the body
+  }else if( !req.body.text ){
+    res.status(400).json({
+      message: "missing required text field"
+    });
+  }else{
+    //if validation passes
+    next();
+  }//end if else
+}//end validatePost
+
 router.post('/', validateUser, (req, res) => {
   res.status(200).json({messgae: "success"})
 });
@@ -70,23 +88,5 @@ router.delete('/:id', validateUserId, (req, res) => {
 router.put('/:id', validateUserId, (req, res) => {
   // do your magic!
 });
-
-function validatePost(req, res, next) {
-  console.log('validatePost: ', validatePost);
-  // if body is empty
-  if( Object.keys(req.body).length <= 0 ){
-    res.status(400).json({
-      message: "missing post data"
-    });
-    //if text field is not in the body
-  }else if( !req.body.text ){
-    res.status(400).json({
-      message: "missing required text field"
-    });
-  }else{
-    //if validation passes
-    next();
-  }//end if else
-}//end validatePost
 
 module.exports = router;
