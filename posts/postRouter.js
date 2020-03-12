@@ -1,5 +1,6 @@
 const express = require('express');
 const posts= require('../posts/postDb');
+const shortid = require('shortid');
 
 const router = express.Router();
 
