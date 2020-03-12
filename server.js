@@ -38,4 +38,9 @@ server.get('/', (req, res) => {
   res.send(`<h2>Welcome: ${req.hostname} to my API</h2>`);
 });
 
+//catch-all/fall-back case
+server.use(function notFound(req, res, next){
+  res.status(404).json({error: "We could not find what you are looking for"})
+});
+
 module.exports = server;
