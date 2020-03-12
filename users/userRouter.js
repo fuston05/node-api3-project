@@ -1,5 +1,6 @@
 const express = require('express');
 const users= require('../users/userDb');
+const posts= require('../posts/postDb');
 const shortid = require('shortid');
 
 const router = express.Router();
@@ -62,32 +63,91 @@ function validatePost(req, res, next) {
   }//end if else
 }//end validatePost
 
+//route handlers
+//create a new user
 router.post('/', validateUser, (req, res) => {
-  res.status(200).json({messgae: "success"})
+  users.insert(req.body)
+  .then( user => {
+    res.status(201).json({user});
+  } )
+  .catch(error => {
+    res.status(500).json({
+      error: "Could not process your request"
+    })
+  })
 });
 
+// add a post for a given user by id
 router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
-  res.status(200).json({message: "success from /:id/posts"});
+  posts.insert(req.body)
+  .then( post => {
+    res.status(201).json({post});
+  } )
+  .catch(error => {
+    error: "Could not process your request"
+  });
 });
 
+//get all users
 router.get('/', (req, res) => {
-  // do your magic!
+  users.get()
+  .then( users => {
+    res.status(200).json({users});
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: "Could not process your request"
+    });
+  })
 });
 
+//get a user by ID
 router.get('/:id', validateUserId, (req, res) => {
-  // do your magic!
+  users.getById(req.params.id)
+  .then(user => {
+    res.status(200).json({user})
+  })
+  .catch(error => {
+    res.status(500).json({
+      error: "could not process your request"
+    });
+  })
 });
 
+//get all posts for a user: by their ID
 router.get('/:id/posts', validateUserId, (req, res) => {
-  // do your magic!
+  users.getUserPosts(req.params.id)
+  .then( posts => {
+    res.status(200).json({posts});
+  } )
+  .catch(error => {
+    res.status(500).json({error: "Could not process your request"});
+  })
 });
 
+//delete a user by ID
 router.delete('/:id', validateUserId, (req, res) => {
-  // do your magic!
+  users.remove(req.params.id)
+  .then( delRes => {
+    res.status(200).json({delRes});
+  })
+  .catch(error => {
+    res.status(500).json({error: "Could not process your request"});
+  })
 });
 
+// edit a uer by ID
 router.put('/:id', validateUserId, (req, res) => {
-  // do your magic!
+  !req.body.name ? res.status(400).json({error: "Must have a name"}) : null
+  users.update(req.params.id, req.body)
+  .then( user => {
+    res.status(200).json({user});
+  } )
+  .catch(error => {
+    res.status(500).json({
+      error: "Could not process your request"
+    })
+  });
 });
 
 module.exports = router;
